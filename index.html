@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranked Leaderboard</title>
+    <title>Advanced Player Leaderboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/style.css">
     
     <style>
         :root {
             --bg-body: #0d1117;
             --bg-card: #161b22;
-            --bg-row-upper: #21262d; /* Brighter for top players */
-            --bg-row-lower: #161b22; /* Standard dark */
+            
+            /* Backgrounds for Upper vs Lower rows */
+            --bg-upper: #21262d; /* Brighter */
+            --bg-lower: #161b22; /* Darker/Standard */
+            
             --text-main: #f0f6fc;
             --text-muted: #8b949e;
-            --border-color: #30363d;
             
-            /* Tier Accents */
-            --tier1-accent: #d29922;
+            /* Tier Colors */
+            --tier1-accent: #f59e0b;
             --tier2-accent: #8b949e;
-            --tier3-accent: #9a6700;
+            --tier3-accent: #b45309;
             
-            --status-online: #238636;
-            --status-offline: #da3633;
+            --status-green: #238636;
         }
 
         * {
@@ -48,110 +49,80 @@
             max-width: 1600px;
         }
 
-        /* Responsive scaling */
+        /* Responsive Columns */
         @media (max-width: 1200px) { .board-container { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 800px) { .board-container { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 500px) { .board-container { grid-template-columns: 1fr; } }
 
         .tier-column {
             background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
             border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            border: 1px solid #30363d;
+            height: fit-content;
         }
 
-        /* Tier Headers */
         .tier-header {
             padding: 12px;
             text-align: center;
             font-weight: 700;
             font-size: 1.1rem;
+            border-bottom: 1px solid #30363d;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background: rgba(255,255,255,0.03);
-            border-bottom: 1px solid var(--border-color);
         }
 
-        .tier-1 .tier-header { color: var(--tier1-accent); }
-        .tier-2 .tier-header { color: var(--tier2-accent); }
-
-        /* Player Rows */
+        /* Row Styling */
         .player-row {
             display: grid;
             grid-template-columns: 4px 32px 1fr auto;
             align-items: center;
-            gap: 10px;
-            padding: 6px 12px;
-            border-bottom: 1px solid var(--border-color);
-            min-height: 44px;
+            gap: 12px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #30363d;
+            transition: 0.2s ease;
         }
 
-        /* UPPER Tier Styling (Brighter) */
+        /* Upper Tier Styling: Brighter background */
         .player-row.upper {
-            background-color: var(--bg-row-upper);
+            background-color: var(--bg-upper);
         }
 
-        /* LOWER Tier Styling (Darker) */
+        /* Lower Tier Styling: Darker background */
         .player-row.lower {
-            background-color: var(--bg-row-lower);
+            background-color: var(--bg-lower);
         }
 
         .status-bar {
-            width: 3px;
-            height: 70%;
+            height: 20px;
+            width: 4px;
             border-radius: 2px;
+            background-color: var(--status-green);
         }
-        .online { background-color: var(--status-online); }
-        .offline { background-color: var(--status-offline); }
 
         .avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 3px;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
             background: #30363d;
         }
 
         .name {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            color: var(--text-main);
         }
 
-        /* Arrow Logic */
-        .rank-icons {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .rank-icon {
             color: var(--text-muted);
-            font-size: 0.7rem;
-            opacity: 0.5;
+            font-weight: 700;
+            font-size: 1rem;
         }
 
-        /* The double up arrow style */
-        .double-arrow::before {
-            content: "▲";
-            display: block;
-            margin-bottom: -4px;
-        }
-        .double-arrow::after {
-            content: "▲";
-            display: block;
-        }
-
-        .single-arrow::after {
-            content: "▲";
-        }
-
-        /* Special highlight for Tier 1 */
-        .tier-1 .player-row {
-            background: linear-gradient(90deg, rgba(138, 43, 226, 0.15), transparent);
-            border-left: 2px solid blueviolet;
-        }
+        /* Specific Tier Header Colors */
+        .t1 .tier-header { color: var(--tier1-accent); }
+        .t2 .tier-header { color: var(--tier2-accent); }
+        .t3 .tier-header { color: var(--tier3-accent); }
     </style>
 </head>
 <body>
@@ -159,49 +130,60 @@
     <div class="board-container" id="leaderboard"></div>
 
     <script>
-        // Data Configuration
-        const tiers = {
-            "Tier 1": ["K1RBE"],
-            "Tier 2": ["Camcal", "Demonmcc", "KingD3fault", "qPower", "Tokenu", "cloudmlol", "Cowarted", "Dwggo", "SuperBowserSpike", "C1utch", "MoezXF", "IRONSKKEGOXX7153", "ItzEggman", "GalleryWalk"],
-            "Tier 3": ["jayckuuub", "ItzTerrel", "thelastw1nter", "isolatiion", "NoLimitDash", "otbkibble", "cizell", "Xeirlo", "iLurkin", "N9vara", "ASVxGOD_"],
-            "Tier 4": ["MPI_YT", "chuypopis", "trayde_", "8amnNoticeMe", "Sasukex7z", "TheSwe4ter", "CXPYR1GHT", "K1RBEOFASIA", "1xsv", "Cqsualty"],
-            "Tier 5": ["ALIPROYT1", "hiadyman", "barbarthecrafter", "Certified7399", "FIERROSO01", "Khromer", "SorryForSnow", "Ted_TNT"]
+        // EASY EDIT DATA: Just change 'rankType' to 'upper' or 'lower'
+        const data = {
+            "Tier 1": [
+                { name: "K1RBE", rankType: "upper" }
+            ],
+            "Tier 2": [
+                { name: "Camcal", rankType: "upper" },
+                { name: "Demonmcc", rankType: "upper" },
+                { name: "KingD3fault", rankType: "upper" },
+                { name: "qPower", rankType: "lower" },
+                { name: "Tokenu", rankType: "lower" }
+            ],
+            "Tier 3": [
+                { name: "jayckuuub", rankType: "upper" },
+                { name: "ItzTerrel", rankType: "lower" }
+            ],
+            "Tier 4": [
+                { name: "MPI_YT", rankType: "upper" },
+                { name: "chuypopis", rankType: "lower" }
+            ],
+            "Tier 5": [
+                { name: "ALIPROYT1", rankType: "upper" },
+                { name: "hiadyman", rankType: "lower" }
+            ]
         };
 
-        const board = document.getElementById('leaderboard');
+        const container = document.getElementById('leaderboard');
 
-        Object.entries(tiers).forEach(([tierName, players]) => {
-            const tierDiv = document.createElement('div');
-            tierDiv.className = `tier-column ${tierName.toLowerCase().replace(' ', '-')}`;
+        Object.keys(data).forEach((tier, index) => {
+            const column = document.createElement('div');
+            column.className = `tier-column t${index + 1}`;
             
-            let html = `
+            let rowsHtml = `
                 <div class="tier-header">
-                    <span>🏆</span> ${tierName}
+                    <span>🏆</span> ${tier}
                 </div>
-                <div class="player-list">
             `;
 
-            players.forEach((name, index) => {
-                // Logic: First 6 players are "Upper", others are "Lower"
-                // Tier 1 is always treated as Upper/Unique
-                const isTier1 = tierName === "Tier 1";
-                const isUpper = index < 6 || isTier1;
-                const rowClass = isUpper ? 'upper' : 'lower';
-                const arrowClass = isUpper ? 'double-arrow' : 'single-arrow';
-
-                html += `
-                    <div class="player-row ${rowClass}">
-                        <div class="status-bar online"></div>
-                        <img class="avatar" src="https://minotar.net/avatar/${name}/32.png">
-                        <div class="name">${name}</div>
-                        <div class="rank-icons ${arrowClass}"></div>
+            data[tier].forEach(player => {
+                // Logic for the arrows: Upper gets double (»), Lower gets single (^)
+                const arrow = player.rankType === 'upper' ? '»' : '▲';
+                
+                rowsHtml += `
+                    <div class="player-row ${player.rankType}">
+                        <div class="status-bar"></div>
+                        <img class="avatar" src="https://minotar.net/avatar/${player.name}/32.png">
+                        <div class="name">${player.name}</div>
+                        <div class="rank-icon">${arrow}</div>
                     </div>
                 `;
             });
 
-            html += `</div>`;
-            tierDiv.innerHTML = html;
-            board.appendChild(tierDiv);
+            column.innerHTML = rowsHtml;
+            container.appendChild(column);
         });
     </script>
 </body>
