@@ -40,6 +40,7 @@
             padding-bottom: 24px;
         }
 
+        /* --- Scrollbar --- */
         .board-wrapper::-webkit-scrollbar {
             height: 12px;
         }
@@ -67,7 +68,7 @@
             height: fit-content;
         }
 
-        /* --- Disconnected Headers (Kept As-Is) --- */
+        /* --- Tier Headers --- */
         .tier-header {
             padding: 20px 14px;
             text-align: center;
@@ -97,17 +98,23 @@
         .tier-5 .tier-header { color: #a87956; background: linear-gradient(to bottom, rgba(168, 121, 86, 0.25), var(--bg-card)); }
         .tier-6 .tier-header { color: #8b949e; background: linear-gradient(to bottom, rgba(139, 148, 158, 0.2), var(--bg-card)); }
 
-        /* --- Compact Disconnected Player Rows --- */
+        /* --- Fixed Sub-Pixel Spacing via Parent Flex Gap --- */
+        .player-list {
+            display: flex;
+            flex-direction: column;
+            gap: 3px; 
+        }
+
+        /* --- Player Rows --- */
         .player-row {
             display: grid;
-            /* Updated for slightly tighter layout with smaller avatar */
             grid-template-columns: 26px 1fr auto; 
             align-items: center;
-            gap: 8px; /* Reduced gap */
-            padding: 3px 10px; /* Highly compact vertical padding */
+            gap: 8px;
+            padding: 3px 10px;
             
-            margin-bottom: 3px; /* Reduced vertical gap between rows */
-            border-radius: 5px; /* Slightly tighter rounding */
+            /* Margin removed to prevent sub-pixel rounding errors */
+            border-radius: 5px;
             border: 1px solid #21262d;
             transition: transform 0.1s ease;
         }
@@ -116,26 +123,25 @@
             transform: scale(1.02);
         }
 
-        /* Specific row backgrounds */
         .player-row.rank-high { background-color: var(--bg-row-high); }
         .player-row.rank-low { background-color: var(--bg-row-low); opacity: 0.95; }
 
         .avatar {
-            width: 26px; /* Scaled down avatar size */
+            width: 26px;
             height: 26px;
-            border-radius: 3px; /* Proportionally tighter rounding */
+            border-radius: 3px;
             background: #30363d;
             object-fit: cover;
         }
 
         .username {
-            font-size: 0.8rem; /* Scaled down font size */
+            font-size: 0.8rem;
             font-weight: 500;
             line-height: 1;
         }
 
         .rank-icon {
-            font-size: 16px !important; /* Scaled down rank icon */
+            font-size: 16px !important;
             font-variation-settings: 'wght' 600; 
             user-select: none;
         }
