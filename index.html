@@ -18,11 +18,7 @@
             --text-muted: #7d8590;
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Geist', sans-serif;
@@ -42,7 +38,7 @@
 
         .main-header h1 {
             font-size: 2.75rem;
-            font-weight: 500; /* Lightened weight */
+            font-weight: 500;
             letter-spacing: -0.03em;
             margin-bottom: 4px;
             background: linear-gradient(to right, #ffffff, #aeb4be);
@@ -56,14 +52,12 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-weight: 400; /* No bold for names */
+            font-weight: 400;
         }
 
-        .main-header .divider { 
-            opacity: 0.3; 
-        }
+        .main-header .divider { opacity: 0.3; }
 
-        /* --- Board Container & Scrollbar --- */
+        /* --- Board Container --- */
         .board-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -82,11 +76,7 @@
             min-width: 100%;
         }
 
-        /* --- Tier Columns & Headers --- */
-        .tier-column { 
-            background-color: transparent; 
-            height: fit-content; 
-        }
+        .tier-column { background-color: transparent; height: fit-content; }
 
         .tier-header {
             padding: 20px 14px;
@@ -104,10 +94,7 @@
             border: 1px solid #30363d;
         }
 
-        .tier-header .material-symbols-outlined { 
-            font-size: 32px; 
-            font-variation-settings: 'wght' 400; 
-        }
+        .tier-header .material-symbols-outlined { font-size: 32px; font-variation-settings: 'wght' 400; }
 
         .tier-1 .tier-header { color: #a3e635; background: linear-gradient(to bottom, rgba(163, 230, 53, 0.2), var(--bg-card)); }
         .tier-2 .tier-header { color: #facc15; background: linear-gradient(to bottom, rgba(250, 204, 21, 0.2), var(--bg-card)); }
@@ -116,12 +103,7 @@
         .tier-5 .tier-header { color: #a87956; background: linear-gradient(to bottom, rgba(168, 121, 86, 0.25), var(--bg-card)); }
         .tier-6 .tier-header { color: #8b949e; background: linear-gradient(to bottom, rgba(139, 148, 158, 0.2), var(--bg-card)); }
 
-        /* --- Player List & Rows --- */
-        .player-list { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 4px; /* Fixed sub-pixel gap */
-        }
+        .player-list { display: flex; flex-direction: column; gap: 4px; }
 
         .player-row {
             display: grid;
@@ -137,32 +119,16 @@
         .player-row:hover { transform: scale(1.02); }
         .player-row.rank-high { background-color: var(--bg-row-high); }
         .player-row.rank-low { background-color: var(--bg-row-low); opacity: 0.95; }
+        
+        /* New Neutral Rank Style */
+        .player-row.rank-none { background-color: var(--bg-row-low); }
 
-        /* --- Player Details --- */
-        .avatar { 
-            width: 26px; 
-            height: 26px; 
-            border-radius: 3px; 
-            background: #30363d; 
-            object-fit: cover; 
-        }
-
-        .username { 
-            font-size: 0.8rem; 
-            font-weight: 500; 
-            line-height: 1; 
-        }
-
-        .rank-icon { 
-            font-size: 16px !important; 
-            font-variation-settings: 'wght' 600; 
-            user-select: none; 
-        }
-
+        .avatar { width: 26px; height: 26px; border-radius: 3px; background: #30363d; object-fit: cover; }
+        .username { font-size: 0.8rem; font-weight: 500; line-height: 1; }
+        .rank-icon { font-size: 16px !important; font-variation-settings: 'wght' 600; user-select: none; }
         .rank-high .rank-icon { color: #238636; }
         .rank-low .rank-icon { color: #da3633; }
 
-        /* --- Footer Section --- */
         .board-footer {
             margin-top: 32px;
             color: var(--text-muted);
@@ -200,9 +166,7 @@
 
     <script>
         const data = {
-            "Actually Good": [
-                { name: "Kephralis", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/sy.png" }
-            ],
+            "Actually Good": [{ name: "Kephralis", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/sy.png" }],
             "Decent": [
                 { name: "Mr Binzy", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/bnz.png" },
                 { name: "BisonJaguar", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/bj.png" },
@@ -228,11 +192,11 @@
                 { name: "DeViL1090109010", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" }
             ],
             "Trash": [
-                { name: "PlaceholderUsername", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
-                { name: "PlaceholderUsername2", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" }
+                { name: "PlaceholderUsername", rank: "none", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
+                { name: "PlaceholderUsername2", rank: "none", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" }
             ],
             "Cheating": [
-                { name: "PlaceholderUsername3", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" }
+                { name: "PlaceholderUsername3", rank: "none", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" }
             ]
         };
 
@@ -248,12 +212,15 @@
                 tierDiv.className = `tier-column tier-${index + 1}`;
                 
                 let playersHtml = data[tier].map(p => {
-                    const iconName = p.rank === "high" ? "north" : "south";
+                    const isRankless = (tier === "Trash" || tier === "Cheating");
+                    const currentRankClass = isRankless ? "rank-none" : `rank-${p.rank}`;
+                    const iconHtml = isRankless ? '' : `<span class="material-symbols-outlined rank-icon">${p.rank === "high" ? "north" : "south"}</span>`;
+                    
                     return `
-                        <div class="player-row rank-${p.rank}">
+                        <div class="player-row ${currentRankClass}">
                             <img src="${p.img}" class="avatar" alt="${p.name}">
                             <div class="username">${p.name}</div>
-                            <span class="material-symbols-outlined rank-icon">${iconName}</span>
+                            ${iconHtml}
                         </div>
                     `;
                 }).join('');
