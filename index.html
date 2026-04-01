@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Player Leaderboard</title>
+    <title>Leaderboard - Geist Edition</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/style.css">
     
     <style>
         :root {
+            /* Color Palette from Reference */
             --bg-body: #0d1117;
             --bg-card: #161b22;
             
-            /* Backgrounds for Upper vs Lower rows */
-            --bg-upper: #21262d; /* Brighter */
-            --bg-lower: #161b22; /* Darker/Standard */
+            /* Row Colors */
+            --bg-row-high: #1c2128; /* Brighter for Upper Tier */
+            --bg-row-low: #13171d;  /* Darker for Lower Tier */
             
-            --text-main: #f0f6fc;
-            --text-muted: #8b949e;
+            --text-main: #ffffff;
+            --text-muted: #7d8590;
             
-            /* Tier Colors */
-            --tier1-accent: #f59e0b;
-            --tier2-accent: #8b949e;
-            --tier3-accent: #b45309;
+            /* Status Colors */
+            --status-high: #238636; /* Green */
+            --status-low: #da3633;  /* Red/Darker */
             
-            --status-green: #238636;
+            /* Tier Header Accents */
+            --tier1-gold: #d29922;
+            --tier2-silver: #8b949e;
+            --tier3-bronze: #af7d24;
         }
 
         * {
@@ -41,88 +45,111 @@
             justify-content: center;
         }
 
+        /* --- Grid Layout --- */
         .board-container {
             display: grid;
             grid-template-columns: repeat(5, minmax(250px, 1fr));
-            gap: 1rem;
+            gap: 12px;
             width: 100%;
             max-width: 1600px;
         }
 
         /* Responsive Columns */
-        @media (max-width: 1200px) { .board-container { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 800px) { .board-container { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 500px) { .board-container { grid-template-columns: 1fr; } }
+        @media (max-width: 1400px) { .board-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { .board-container { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .board-container { grid-template-columns: 1fr; } }
 
         .tier-column {
             background-color: var(--bg-card);
             border-radius: 6px;
             border: 1px solid #30363d;
+            overflow: hidden;
             height: fit-content;
         }
 
+        /* --- Headers --- */
         .tier-header {
             padding: 12px;
             text-align: center;
             font-weight: 700;
             font-size: 1.1rem;
-            border-bottom: 1px solid #30363d;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent);
+            border-bottom: 1px solid #30363d;
         }
 
-        /* Row Styling */
+        .tier-1 .tier-header { color: var(--tier1-gold); }
+        .tier-2 .tier-header { color: var(--tier2-silver); }
+        .tier-3 .tier-header { color: var(--tier3-bronze); }
+
+        /* --- Player Rows --- */
         .player-row {
             display: grid;
             grid-template-columns: 4px 32px 1fr auto;
             align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-            border-bottom: 1px solid #30363d;
-            transition: 0.2s ease;
+            gap: 10px;
+            padding: 6px 10px;
+            border-bottom: 1px solid #21262d;
+            transition: filter 0.2s;
         }
 
-        /* Upper Tier Styling: Brighter background */
-        .player-row.upper {
-            background-color: var(--bg-upper);
+        .player-row:hover {
+            filter: brightness(1.2);
         }
 
-        /* Lower Tier Styling: Darker background */
-        .player-row.lower {
-            background-color: var(--bg-lower);
+        /* High vs Low Styling */
+        .player-row.rank-high {
+            background-color: var(--bg-row-high);
         }
 
+        .player-row.rank-low {
+            background-color: var(--bg-row-low);
+            opacity: 0.9;
+        }
+
+        /* Status Indicator Left Bar */
         .status-bar {
-            height: 20px;
-            width: 4px;
+            height: 80%;
+            width: 3px;
             border-radius: 2px;
-            background-color: var(--status-green);
         }
+        .rank-high .status-bar { background-color: var(--status-high); }
+        .rank-low .status-bar { background-color: var(--status-low); }
 
         .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
+            width: 28px;
+            height: 28px;
+            border-radius: 3px;
             background: #30363d;
         }
 
-        .name {
-            font-size: 0.9rem;
+        .username {
+            font-size: 0.85rem;
             font-weight: 500;
+            letter-spacing: -0.01em;
         }
 
-        .rank-icon {
+        /* --- Arrow Logic --- */
+        .arrows {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             color: var(--text-muted);
-            font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.7rem;
+            line-height: 0.6;
         }
 
-        /* Specific Tier Header Colors */
-        .t1 .tier-header { color: var(--tier1-accent); }
-        .t2 .tier-header { color: var(--tier2-accent); }
-        .t3 .tier-header { color: var(--tier3-accent); }
+        /* Double Arrow for High Rank */
+        .rank-high .arrows::before { content: '▲'; }
+        .arrows::after { content: '▲'; }
+        
+        /* Tier 1 special case: always high/gold */
+        .tier-1 .player-row { background-color: rgba(210, 153, 34, 0.1); }
+
     </style>
 </head>
 <body>
@@ -130,61 +157,64 @@
     <div class="board-container" id="leaderboard"></div>
 
     <script>
-        // EASY EDIT DATA: Just change 'rankType' to 'upper' or 'lower'
+        /**
+         * EASY TO EDIT DATA SECTION
+         * rank: 'high' (Brighter, double arrow, green bar)
+         * rank: 'low'  (Darker, single arrow, red bar)
+         */
         const data = {
             "Tier 1": [
-                { name: "K1RBE", rankType: "upper" }
+                { name: "K1RBE", rank: "high", img: "https://minotar.net/avatar/K1RBE/32.png" }
             ],
             "Tier 2": [
-                { name: "Camcal", rankType: "upper" },
-                { name: "Demonmcc", rankType: "upper" },
-                { name: "KingD3fault", rankType: "upper" },
-                { name: "qPower", rankType: "lower" },
-                { name: "Tokenu", rankType: "lower" }
+                { name: "Camcal", rank: "high", img: "https://minotar.net/avatar/Camcal/32.png" },
+                { name: "Demonmcc", rank: "high", img: "https://minotar.net/avatar/Demonmcc/32.png" },
+                { name: "KingD3fault", rank: "high", img: "https://minotar.net/avatar/KingD3fault/32.png" },
+                { name: "qPower", rank: "low", img: "https://minotar.net/avatar/qPower/32.png" },
+                { name: "Tokenu", rank: "low", img: "https://minotar.net/avatar/Tokenu/32.png" },
+                { name: "cloudmlol", rank: "low", img: "https://minotar.net/avatar/cloudmlol/32.png" }
             ],
             "Tier 3": [
-                { name: "jayckuuub", rankType: "upper" },
-                { name: "ItzTerrel", rankType: "lower" }
+                { name: "jayckuuub", rank: "high", img: "https://minotar.net/avatar/jayckuuub/32.png" },
+                { name: "ItzTerrel", rank: "high", img: "https://minotar.net/avatar/ItzTerrel/32.png" },
+                { name: "thelastw1nter", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
+                { name: "isolation", rank: "low", img: "https://minotar.net/avatar/isolation/32.png" }
             ],
             "Tier 4": [
-                { name: "MPI_YT", rankType: "upper" },
-                { name: "chuypopis", rankType: "lower" }
+                { name: "MPI_YT", rank: "high", img: "https://minotar.net/avatar/MPI_YT/32.png" },
+                { name: "chuypopis", rank: "low", img: "https://minotar.net/avatar/chuypopis/32.png" }
             ],
             "Tier 5": [
-                { name: "ALIPROYT1", rankType: "upper" },
-                { name: "hiadyman", rankType: "lower" }
+                { name: "ALIPROYT1", rank: "high", img: "https://minotar.net/avatar/ALIPROYT1/32.png" },
+                { name: "hiadyman", rank: "low", img: "https://minotar.net/avatar/hiadyman/32.png" }
             ]
         };
 
-        const container = document.getElementById('leaderboard');
-
-        Object.keys(data).forEach((tier, index) => {
-            const column = document.createElement('div');
-            column.className = `tier-column t${index + 1}`;
+        function render() {
+            const container = document.getElementById('leaderboard');
             
-            let rowsHtml = `
-                <div class="tier-header">
-                    <span>🏆</span> ${tier}
-                </div>
-            `;
-
-            data[tier].forEach(player => {
-                // Logic for the arrows: Upper gets double (»), Lower gets single (^)
-                const arrow = player.rankType === 'upper' ? '»' : '▲';
+            Object.keys(data).forEach((tier, index) => {
+                const tierDiv = document.createElement('div');
+                tierDiv.className = `tier-column tier-${index + 1}`;
                 
-                rowsHtml += `
-                    <div class="player-row ${player.rankType}">
+                let playersHtml = data[tier].map(p => `
+                    <div class="player-row rank-${p.rank}">
                         <div class="status-bar"></div>
-                        <img class="avatar" src="https://minotar.net/avatar/${player.name}/32.png">
-                        <div class="name">${player.name}</div>
-                        <div class="rank-icon">${arrow}</div>
+                        <img src="${p.img}" class="avatar">
+                        <div class="username">${p.name}</div>
+                        <div class="arrows"></div>
                     </div>
-                `;
-            });
+                `).join('');
 
-            column.innerHTML = rowsHtml;
-            container.appendChild(column);
-        });
+                tierDiv.innerHTML = `
+                    <div class="tier-header">🏆 ${tier}</div>
+                    <div class="player-list">${playersHtml}</div>
+                `;
+                container.appendChild(tierDiv);
+            });
+        }
+
+        render();
     </script>
 </body>
 </html>
