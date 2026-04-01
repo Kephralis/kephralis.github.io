@@ -3,380 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamer Leaderboard</title>
+    <title>Minecraft Tier List</title>
     <style>
-        /* =========================================
-           1. Global Styles & Theme
-           ========================================= */
+        /* CSS Variables - EDIT THESE TO CHANGE SITE COLORS AND STYLES */
+        :root {
+            --bg-color: #0c0d12;
+            --column-width: 280px;
+            --entry-padding: 6px 10px;
+            
+            --tier1-accent: #fcd34d; /* Golden */
+            --tier2-accent: #9ca3af; /* Silver */
+            --tier3-accent: #b45309; /* Bronze */
+            --tier4-accent: #374151; /* Dark Grey */
+            --tier5-accent: #1f2937; /* Very Dark Grey */
+
+            --text-main: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --entry-bg: #111827;
+            --border-radius-main: 12px;
+            --border-radius-entry: 6px;
+        }
+
         body {
-            background-color: #1e2025; /* Main dark background */
-            color: #ffffff; /* Default text color */
-            font-family: 'Montserrat', sans-serif, Arial; /* Clean gaming font stack */
             margin: 0;
-            padding: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden; /* Prevents unwanted horizontal scroll on some devices */
+        }
+
+        /* --- Main Content Area --- */
+        .page-container {
             display: flex;
-            justify-content: center; /* Center the leaderboard */
-            align-items: start;
-            min-height: 100vh;
-            padding: 20px; /* Add some space around the container */
-            box-sizing: border-box;
-        }
-
-        /* Leaderboard Container */
-        .leaderboard-container {
+            justify-content: center;
+            align-items: flex-start;
             width: 100%;
-            max-width: 1400px; /* Set a reasonable maximum width for desktop */
-            margin: 0 auto;
+            height: 100%;
         }
 
-        /* =========================================
-           2. Leaderboard Structure (Tiers)
-           ========================================= */
-        /* Flex container for the 5 Tier columns */
-        .tier-columns {
+        .tier-columns-container {
             display: flex;
-            flex-direction: row; /* Desktop: Columns are side-by-side */
-            gap: 15px; /* Spacing between columns */
-            width: 100%;
+            gap: 12px;
+            max-width: 100%;
+            overflow-x: auto; /* Adds scrolling for small screens if columns don't fit */
+            padding-bottom: 20px; /* Space for the scrollbar */
         }
 
-        /* Individual Tier Column */
+        /* Responsive Breakpoints */
+        @media (max-width: 1400px) {
+            /* On medium screens, shift from vertical columns to stacking */
+            .tier-columns-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+        }
+
+        /* --- Individual Tier Column --- */
         .tier-column {
-            flex: 1; /* Allow columns to grow and shrink equally */
-            background-color: #2b2e35; /* Header and base column background */
-            border-radius: 8px; /* Rounded corners for the entire column base */
-            overflow: hidden; /* For border-radius on content */
+            width: var(--column-width);
+            background-color: #111827;
+            border-radius: var(--border-radius-main);
             display: flex;
             flex-direction: column;
-            border: 1px solid #3a3f4a; /* Add a subtle border */
+            flex-shrink: 0; /* Prevents column from squishing below width on scroll */
         }
 
-        /* =========================================
-           3. Tier Headers
-           ========================================= */
         .tier-header {
             display: flex;
             align-items: center;
-            justify-content: start;
-            padding: 12px 15px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            letter-spacing: 0.5px;
-            text-transform: capitalize; /* Or use text directly */
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-top-left-radius: var(--border-radius-main);
+            border-top-right-radius: var(--border-radius-main);
+            background-color: #1f2937;
+            margin-bottom: 10px;
         }
 
-        /* Icon styling in the header */
-        .tier-header .tier-icon {
-            font-size: 1.5rem;
-            margin-right: 12px;
-        }
-
-        /* Unique styling for each Tier Header */
-        /* Tier 1 - Gold */
-        .tier-1 .tier-header {
-            background-color: #31333c; /* Slightly darker than main column */
-            color: #e5b746; /* Gold text */
-        }
-        .tier-1 .tier-icon::before { content: "🏆"; } /* Place a trophy here. Use an <img> or FontAwesome for real icons */
-
-        /* Tier 2 - Silver */
-        .tier-2 .tier-header {
-            background-color: #31333c;
-            color: #a7adb8; /* Silver text */
-        }
-        .tier-2 .tier-icon::before { content: "🥈"; }
-
-        /* Tier 3 - Bronze */
-        .tier-3 .tier-header {
-            background-color: #31333c;
-            color: #b5814e; /* Bronze text */
-        }
-        .tier-3 .tier-icon::before { content: "🥉"; }
-
-        /* Tiers 4 and 5 - Neutral Grey */
-        .tier-4 .tier-header,
-        .tier-5 .tier-header {
-            background-color: #31333c;
-            color: #a7adb8; /* Grey text */
-        }
-        .tier-4 .tier-icon::before { content: "🏅"; } /* Place a different icon */
-        .tier-5 .tier-icon::before { content: "🏅"; }
-
-        /* =========================================
-           4. Player Content Area & Rows
-           ========================================= */
-        /* List for player rows */
-        .tier-player-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1; /* Make the list fill the remaining column height */
-        }
-
-        /* Individual Player Row Styling */
-        .player-row {
+        .tier-title-group {
             display: flex;
             align-items: center;
-            padding: 10px 15px;
-            border-bottom: 1px solid #3a3f4a; /* Subtle line between players */
-            transition: background-color 0.2s ease; /* Hover effect */
-            background-color: #25282e; /* Darker grey for content rows */
+            gap: 10px;
         }
 
-        /* Alternating row colors for better visibility */
-        .player-row:nth-child(even) {
-            background-color: #2b2e35;
+        .trophy-icon {
+            width: 24px;
+            height: 24px;
         }
 
-        /* Hover effect for a player row */
-        .player-row:hover {
-            background-color: #3a3f4a; /* Lighter background on hover */
+        .tier-title {
+            font-size: 1.1rem;
+            font-weight: 700;
         }
 
-        /* Player Avatar */
-        .player-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%; /* Circle avatar */
-            background-color: #4a4f5a; /* Placeholder avatar background */
-            margin-right: 12px;
+        .header-arrow-icon {
+            width: 14px;
+            height: 14px;
+            opacity: 0.5;
+        }
+
+        /* --- Individual Player Entry --- */
+        .player-list {
             display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 0 10px 10px 10px;
+        }
+
+        .player-entry {
+            display: flex;
+            align-items: center;
+            background-color: var(--entry-bg);
+            border-radius: var(--border-radius-entry);
+            padding: var(--entry-padding);
+            transition: background-color 0.2s;
+        }
+
+        .player-entry:hover {
+            background-color: #1f2937;
+        }
+
+        .skin-avatar-container {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            font-weight: 700;
-            font-size: 0.8rem;
-            color: #a7adb8;
-            overflow: hidden; /* Contain img within circle */
+            background-color: #0c0d12;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-right: 12px;
         }
-        
-        /* If you use an img in the avatar */
-        .player-avatar img {
+
+        .skin-avatar-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
 
-        /* Player Name */
+        .player-info {
+            flex-grow: 1;
+        }
+
         .player-name {
-            flex-grow: 1; /* Take up all available space */
-            font-size: 0.95rem;
-            color: #ffffff;
-            overflow: hidden; /* For long names */
-            text-overflow: ellipsis; /* ... on long names */
-            white-space: nowrap;
+            font-size: 1rem;
+            color: var(--text-main);
         }
 
-        /* Rank Icon on the right (Double Up Arrow) */
-        .player-rank-icon {
-            color: #4a4f5a; /* Faint grey for the icon */
-            font-size: 1.1rem;
-            margin-left: 10px;
-        }
-        .player-rank-icon::before { content: "▲▲"; } /* Double up arrow symbol */
-
-        /* =========================================
-           5. Responsive Breakpoints
-           ========================================= */
-        /* When screen width is 1024px or less */
-        @media screen and (max-width: 1024px) {
-            .tier-columns {
-                flex-wrap: wrap; /* Columns can wrap to the next line */
-                gap: 10px;
-            }
-            .tier-column {
-                flex: 0 0 calc(33.333% - 10px); /* Stack 3 columns per row */
-            }
+        .player-rank {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
         }
 
-        /* When screen width is 768px or less (Tablets & Landscape Mobile) */
-        @media screen and (max-width: 768px) {
-            .tier-column {
-                flex: 0 0 calc(50% - 10px); /* Stack 2 columns per row */
-            }
+        .action-arrow {
+            width: 14px;
+            height: 14px;
+            opacity: 0.3;
         }
 
-        /* When screen width is 480px or less (Portrait Mobile) */
-        @media screen and (max-width: 480px) {
-            .tier-columns {
-                flex-direction: column; /* Stack all columns vertically */
-                gap: 20px;
-            }
-            .tier-column {
-                width: 100%; /* Columns take full width */
-                flex: auto; /* Reset flex-basis and flex-grow */
-            }
+        /* --- Special Styling for Tier 1 Highlighting --- */
+        .tier-column.tier1 .tier-title {
+            color: var(--tier1-accent);
+        }
+
+        .tier-column.tier1 .player-list {
+            padding-top: 10px;
+        }
+
+        .tier-column.tier1 .player-entry.highlighted-entry {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 16px;
+            background-color: #1e1b29; /* Darker Purple for prominence */
+            border-radius: 12px;
+            gap: 12px;
+        }
+
+        .tier-column.tier1 .player-entry.highlighted-entry .skin-avatar-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            margin-right: 0;
+        }
+
+        .tier-column.tier1 .player-entry.highlighted-entry .player-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* --- Utility to replicate entry layout --- */
+        .standard-entry {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Placeholder image style for skin avatars */
+        .skin-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: #555; /* Default background, color can be added inline */
         }
     </style>
 </head>
 <body>
 
-    <div class="leaderboard-container">
-        <div class="tier-columns">
+    <div class="page-container">
+        <div class="tier-columns-container">
 
-            <div class="tier-column tier-1">
+            <div class="tier-column tier1">
                 <div class="tier-header">
-                    <span class="tier-icon"></span>
-                    Tier 1
+                    <div class="tier-title-group">
+                        <svg class="trophy-icon" viewBox="0 0 24 24" fill="#fcd34d"><path d="M18.8 6.4c0-1.2-.8-2.3-2-2.3H16V3c0-.6-.4-1-1-1H9c-.6 0-1 .4-1 1v1.1h-.8c-1.2 0-2 1.1-2 2.3v.4c-1.2.1-2 1.1-2 2.3v.7c0 1.7 1.2 3.2 2.9 3.3.4 1.3 1.2 2.4 2.1 3v1.1c-.1 0-.2.1-.3.2l-2.7 2.7c-.3.3-.3.8 0 1.1.1.1.3.2.5.2s.4-.1.6-.2L7 19h10l.9 2c.3.3.8.3 1.1 0 .3-.3.3-.8 0-1.1l-2.7-2.7c-.1-.1-.2-.2-.3-.2v-1.1c.9-.6 1.7-1.7 2.1-3 1.7-.1 2.9-1.6 2.9-3.3v-.7c0-1.3-.8-2.4-2.2-2.4h-.2v-.3zM6.1 11.2c-.5 0-1.1-.5-1.1-1.4v-.7c0-.9.6-1.5 1.1-1.5H8v3.6c-.6-.1-1.2-.1-1.9-.1zM11.6 16c-1.2 0-2.1-1-2.1-2.2v-9.7h5v9.7c0 1.2-.9 2.2-2.1 2.2zM19 9.8c0 .9-.6 1.5-1.1 1.5-.7 0-1.3 0-1.9.1v-3.7h1.9c.5 0 1.1.6 1.1 1.5v.7z"></path></svg>
+                        <span class="tier-title">Tier 1</span>
+                    </div>
                 </div>
-                <ul class="tier-player-list">
-                    <li class="player-row">
-                        <div class="player-avatar">K1</div>
+                <div class="player-list">
+                    <div class="player-entry highlighted-entry">
+                        <div class="skin-avatar-container">
+                            <div class="skin-placeholder" style="background-color: #9333ea;"></div>
+                        </div>
                         <span class="player-name">K1RBE</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    </ul>
-            </div>
-            <div class="tier-column tier-2">
-                <div class="tier-header">
-                    <span class="tier-icon"></span>
-                    Tier 2
+                    </div>
                 </div>
-                <ul class="tier-player-list">
-                    <li class="player-row">
-                        <div class="player-avatar">Ca</div>
-                        <span class="player-name">Camcal</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">De</div>
-                        <span class="player-name">Demonmcc</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">Ki</div>
-                        <span class="player-name">KingD3fault</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">qP</div>
-                        <span class="player-name">qPower</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">To</div>
-                        <span class="player-name">Tokenu</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">cl</div>
-                        <span class="player-name">cloudmlol</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                </ul>
             </div>
-            <div class="tier-column tier-3">
+
+            <div class="tier-column tier2">
                 <div class="tier-header">
-                    <span class="tier-icon"></span>
-                    Tier 3
+                    <div class="tier-title-group">
+                        <svg class="trophy-icon" viewBox="0 0 24 24" fill="#9ca3af"><path d="M18.8 6.4c0-1.2-.8-2.3-2-2.3H16V3c0-.6-.4-1-1-1H9c-.6 0-1 .4-1 1v1.1h-.8c-1.2 0-2 1.1-2 2.3v.4c-1.2.1-2 1.1-2 2.3v.7c0 1.7 1.2 3.2 2.9 3.3.4 1.3 1.2 2.4 2.1 3v1.1c-.1 0-.2.1-.3.2l-2.7 2.7c-.3.3-.3.8 0 1.1.1.1.3.2.5.2s.4-.1.6-.2L7 19h10l.9 2c.3.3.8.3 1.1 0 .3-.3.3-.8 0-1.1l-2.7-2.7c-.1-.1-.2-.2-.3-.2v-1.1c.9-.6 1.7-1.7 2.1-3 1.7-.1 2.9-1.6 2.9-3.3v-.7c0-1.3-.8-2.4-2.2-2.4h-.2v-.3zM6.1 11.2c-.5 0-1.1-.5-1.1-1.4v-.7c0-.9.6-1.5 1.1-1.5H8v3.6c-.6-.1-1.2-.1-1.9-.1zM11.6 16c-1.2 0-2.1-1-2.1-2.2v-9.7h5v9.7c0 1.2-.9 2.2-2.1 2.2zM19 9.8c0 .9-.6 1.5-1.1 1.5-.7 0-1.3 0-1.9.1v-3.7h1.9c.5 0 1.1.6 1.1 1.5v.7z"></path></svg>
+                        <span class="tier-title" style="color: #9ca3af;">Tier 2</span>
+                    </div>
+                    <svg class="header-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </div>
-                <ul class="tier-player-list">
-                    <li class="player-row">
-                        <div class="player-avatar">ja</div>
-                        <span class="player-name">jayckuuub</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">It</div>
-                        <span class="player-name">ltzTerrel</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">th</div>
-                        <span class="player-name">thelastw1nter</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">is</div>
-                        <span class="player-name">isolatiion</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">No</div>
-                        <span class="player-name">NoLimitDash</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">ot</div>
-                        <span class="player-name">otbkibble</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                </ul>
+                <div class="player-list">
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #fca5a5;"></div></div>
+                            <span class="player-name">Camcal</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #fb923c;"></div></div>
+                            <span class="player-name">Demonmcc</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #000;"></div></div>
+                            <span class="player-name">KingD3fault</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #3b82f6;"></div></div>
+                            <span class="player-name">qPower</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    </div>
             </div>
-            <div class="tier-column tier-4">
+
+            <div class="tier-column tier3">
                 <div class="tier-header">
-                    <span class="tier-icon"></span>
-                    Tier 4
+                    <div class="tier-title-group">
+                        <svg class="trophy-icon" viewBox="0 0 24 24" fill="#b45309"><path d="M18.8 6.4c0-1.2-.8-2.3-2-2.3H16V3c0-.6-.4-1-1-1H9c-.6 0-1 .4-1 1v1.1h-.8c-1.2 0-2 1.1-2 2.3v.4c-1.2.1-2 1.1-2 2.3v.7c0 1.7 1.2 3.2 2.9 3.3.4 1.3 1.2 2.4 2.1 3v1.1c-.1 0-.2.1-.3.2l-2.7 2.7c-.3.3-.3.8 0 1.1.1.1.3.2.5.2s.4-.1.6-.2L7 19h10l.9 2c.3.3.8.3 1.1 0 .3-.3.3-.8 0-1.1l-2.7-2.7c-.1-.1-.2-.2-.3-.2v-1.1c.9-.6 1.7-1.7 2.1-3 1.7-.1 2.9-1.6 2.9-3.3v-.7c0-1.3-.8-2.4-2.2-2.4h-.2v-.3zM6.1 11.2c-.5 0-1.1-.5-1.1-1.4v-.7c0-.9.6-1.5 1.1-1.5H8v3.6c-.6-.1-1.2-.1-1.9-.1zM11.6 16c-1.2 0-2.1-1-2.1-2.2v-9.7h5v9.7c0 1.2-.9 2.2-2.1 2.2zM19 9.8c0 .9-.6 1.5-1.1 1.5-.7 0-1.3 0-1.9.1v-3.7h1.9c.5 0 1.1.6 1.1 1.5v.7z"></path></svg>
+                        <span class="tier-title" style="color: #b45309;">Tier 3</span>
+                    </div>
+                    <svg class="header-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </div>
-                <ul class="tier-player-list">
-                    <li class="player-row">
-                        <div class="player-avatar">MP</div>
-                        <span class="player-name">MPI_YT</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">ch</div>
-                        <span class="player-name">chuypopis</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">tr</div>
-                        <span class="player-name">trayde_</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">8a</div>
-                        <span class="player-name">8amnNoticeMe</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">Sa</div>
-                        <span class="player-name">Sasukex7z</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">Th</div>
-                        <span class="player-name">TheSwe4ter</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                </ul>
+                <div class="player-list">
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #84cc16;"></div></div>
+                            <span class="player-name">jayckuuub</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #9333ea;"></div></div>
+                            <span class="player-name">ItzTerrel</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #a16207;"></div></div>
+                            <span class="player-name">thelastw1nter</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #7dd3fc;"></div></div>
+                            <span class="player-name">Isolation</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                </div>
             </div>
-            <div class="tier-column tier-5">
+
+            <div class="tier-column tier4">
                 <div class="tier-header">
-                    <span class="tier-icon"></span>
-                    Tier 5
+                    <div class="tier-title-group">
+                        <svg class="trophy-icon" viewBox="0 0 24 24" fill="#6b7280"><path d="M18.8 6.4c0-1.2-.8-2.3-2-2.3H16V3c0-.6-.4-1-1-1H9c-.6 0-1 .4-1 1v1.1h-.8c-1.2 0-2 1.1-2 2.3v.4c-1.2.1-2 1.1-2 2.3v.7c0 1.7 1.2 3.2 2.9 3.3.4 1.3 1.2 2.4 2.1 3v1.1c-.1 0-.2.1-.3.2l-2.7 2.7c-.3.3-.3.8 0 1.1.1.1.3.2.5.2s.4-.1.6-.2L7 19h10l.9 2c.3.3.8.3 1.1 0 .3-.3.3-.8 0-1.1l-2.7-2.7c-.1-.1-.2-.2-.3-.2v-1.1c.9-.6 1.7-1.7 2.1-3 1.7-.1 2.9-1.6 2.9-3.3v-.7c0-1.3-.8-2.4-2.2-2.4h-.2v-.3zM6.1 11.2c-.5 0-1.1-.5-1.1-1.4v-.7c0-.9.6-1.5 1.1-1.5H8v3.6c-.6-.1-1.2-.1-1.9-.1zM11.6 16c-1.2 0-2.1-1-2.1-2.2v-9.7h5v9.7c0 1.2-.9 2.2-2.1 2.2zM19 9.8c0 .9-.6 1.5-1.1 1.5-.7 0-1.3 0-1.9.1v-3.7h1.9c.5 0 1.1.6 1.1 1.5v.7z"></path></svg>
+                        <span class="tier-title" style="color: #6b7280;">Tier 4</span>
+                    </div>
+                    <svg class="header-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </div>
-                <ul class="tier-player-list">
-                    <li class="player-row">
-                        <div class="player-avatar">AL</div>
-                        <span class="player-name">ALIPROYT1</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">hi</div>
-                        <span class="player-name">hiadyman</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">ba</div>
-                        <span class="player-name">barbarthecrafter</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">Ce</div>
-                        <span class="player-name">Certified7399</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">Fl</div>
-                        <span class="player-name">FIERROSO1</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                    <li class="player-row">
-                        <div class="player-avatar">Kh</div>
-                        <span class="player-name">Khromer</span>
-                        <span class="player-rank-icon"></span>
-                    </li>
-                </ul>
+                <div class="player-list">
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #a16207;"></div></div>
+                            <span class="player-name">MPI_YT</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #3b82f6;"></div></div>
+                            <span class="player-name">chuypopis</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #555;"></div></div>
+                            <span class="player-name">trayde_</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #fca5a5;"></div></div>
+                            <span class="player-name">8amnNoticeMe</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                </div>
             </div>
-            </div> </div> </body>
+
+            <div class="tier-column tier5">
+                <div class="tier-header">
+                    <div class="tier-title-group">
+                        <svg class="trophy-icon" viewBox="0 0 24 24" fill="#374151"><path d="M18.8 6.4c0-1.2-.8-2.3-2-2.3H16V3c0-.6-.4-1-1-1H9c-.6 0-1 .4-1 1v1.1h-.8c-1.2 0-2 1.1-2 2.3v.4c-1.2.1-2 1.1-2 2.3v.7c0 1.7 1.2 3.2 2.9 3.3.4 1.3 1.2 2.4 2.1 3v1.1c-.1 0-.2.1-.3.2l-2.7 2.7c-.3.3-.3.8 0 1.1.1.1.3.2.5.2s.4-.1.6-.2L7 19h10l.9 2c.3.3.8.3 1.1 0 .3-.3.3-.8 0-1.1l-2.7-2.7c-.1-.1-.2-.2-.3-.2v-1.1c.9-.6 1.7-1.7 2.1-3 1.7-.1 2.9-1.6 2.9-3.3v-.7c0-1.3-.8-2.4-2.2-2.4h-.2v-.3zM6.1 11.2c-.5 0-1.1-.5-1.1-1.4v-.7c0-.9.6-1.5 1.1-1.5H8v3.6c-.6-.1-1.2-.1-1.9-.1zM11.6 16c-1.2 0-2.1-1-2.1-2.2v-9.7h5v9.7c0 1.2-.9 2.2-2.1 2.2zM19 9.8c0 .9-.6 1.5-1.1 1.5-.7 0-1.3 0-1.9.1v-3.7h1.9c.5 0 1.1.6 1.1 1.5v.7z"></path></svg>
+                        <span class="tier-title" style="color: #374151;">Tier 5</span>
+                    </div>
+                    <svg class="header-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+                <div class="player-list">
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #000;"></div></div>
+                            <span class="player-name">ALIPROYT1</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #a16207;"></div></div>
+                            <span class="player-name">hiadyman</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #fde047;"></div></div>
+                            <span class="player-name">barbarthecrafter</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <div class="player-entry">
+                        <div class="standard-entry">
+                            <div class="skin-avatar-container"><div class="skin-placeholder" style="background-color: #c084fc;"></div></div>
+                            <span class="player-name">Certified7399</span>
+                        </div>
+                        <svg class="action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 17l5-5-5-5M6 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
 </html>
