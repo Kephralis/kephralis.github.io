@@ -15,8 +15,6 @@
             --bg-row-low: #13171d;
             --text-main: #ffffff;
             --text-muted: #7d8590;
-            --status-high: #238636;
-            --status-low: #da3633;
         }
 
         * {
@@ -35,16 +33,14 @@
             padding: 2rem;
         }
 
-        /* --- Scrollable Wrapper --- */
         .board-wrapper {
             width: 100%;
             overflow-x: auto;
-            padding-bottom: 24px; /* More space for the larger scrollbar */
+            padding-bottom: 24px;
         }
 
-        /* Widened Scrollbar for easier interaction */
         .board-wrapper::-webkit-scrollbar {
-            height: 16px; /* Larger height makes it much easier to click and drag */
+            height: 16px;
         }
         .board-wrapper::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.02);
@@ -53,13 +49,12 @@
         .board-wrapper::-webkit-scrollbar-thumb {
             background: #30363d;
             border-radius: 10px;
-            border: 3px solid var(--bg-body); /* Creates a "floating" effect */
+            border: 3px solid var(--bg-body);
         }
         .board-wrapper::-webkit-scrollbar-thumb:hover {
             background: #484f58;
         }
 
-        /* --- Grid Layout (Fixed 5 Columns) --- */
         .board-container {
             display: grid;
             grid-template-columns: repeat(5, minmax(280px, 1fr));
@@ -77,17 +72,18 @@
             height: fit-content;
         }
 
-        /* --- Headers & Gradients --- */
+        /* --- Headers Updated --- */
         .tier-header {
-            padding: 14px;
+            padding: 18px 14px; /* Slightly more padding for the larger text */
             text-align: center;
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 800; /* Extra bold for emphasis */
+            font-size: 1.35rem; /* Larger font size as requested */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
             border-bottom: 1px solid #30363d;
+            text-transform: capitalize;
+            letter-spacing: -0.02em;
         }
 
         .tier-1 .tier-header { 
@@ -111,13 +107,14 @@
             background: linear-gradient(to bottom, rgba(168, 121, 86, 0.25), transparent); 
         }
 
-        /* --- Player Rows --- */
+        /* --- Player Rows Updated --- */
         .player-row {
             display: grid;
-            grid-template-columns: 4px 32px 1fr auto;
+            /* Column 1: Image, Column 2: Name, Column 3: Arrows */
+            grid-template-columns: 32px 1fr auto; 
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
+            gap: 12px;
+            padding: 10px 16px;
             border-bottom: 1px solid #21262d;
             transition: background-color 0.15s ease;
         }
@@ -126,27 +123,19 @@
             filter: brightness(1.15);
         }
 
-        /* High vs Low Styling (Tier 1 now uses high background by default) */
         .player-row.rank-high { background-color: var(--bg-row-high); }
         .player-row.rank-low { background-color: var(--bg-row-low); opacity: 0.95; }
 
-        .status-bar {
-            height: 20px;
-            width: 3px;
-            border-radius: 2px;
-        }
-        .rank-high .status-bar { background-color: var(--status-high); }
-        .rank-low .status-bar { background-color: var(--status-low); }
-
         .avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 3px;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
             background: #30363d;
+            object-fit: cover; /* Ensures non-square images don't stretch */
         }
 
         .username {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 500;
         }
 
@@ -172,37 +161,37 @@
     <script>
         const data = {
             "Actually Good": [
-                { name: "Kephralis", rank: "high", img: "https://minotar.net/avatar/K1RBE/32.png" }
+                { name: "Kephralis", rank: "high", img: "https://via.placeholder.com/32" }
             ],
             "Decent": [
-                { name: "Mr Binzy", rank: "high", img: "https://minotar.net/avatar/Camcal/32.png" },
-                { name: "BisonJaguar", rank: "high", img: "https://minotar.net/avatar/Demonmcc/32.png" },
-                { name: "Rozern", rank: "high", img: "https://minotar.net/avatar/KingD3fault/32.png" },
-                { name: "Tik Tok yybd", rank: "high", img: "https://minotar.net/avatar/qPower/32.png" },
+                { name: "Mr Binzy", rank: "high", img: "https://via.placeholder.com/32" },
+                { name: "BisonJaguar", rank: "high", img: "https://via.placeholder.com/32" },
+                { name: "Rozern", rank: "high", img: "https://via.placeholder.com/32" },
+                { name: "Tik Tok yybd", rank: "high", img: "https://via.placeholder.com/32" },
             ],
             "Mid": [
-                { name: "KB0L", rank: "high", img: "https://minotar.net/avatar/jayckuuub/32.png" },
-                { name: "kifve", rank: "low", img: "https://minotar.net/avatar/ItzTerrel/32.png" },
-                { name: "Sorakimine", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
-                { name: "zSqmantha", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
-                { name: "Sayoshima", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
-                { name: "I BuFo I", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
-                { name: "STRAIQHT K", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
-                { name: "RAZPYlbsmYT", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
-                { name: "MegaFoxBound", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
-                { name: "c6m3", rank: "low", img: "https://minotar.net/avatar/thelastw1nter/32.png" },
-                { name: "Drum is 9", rank: "low", img: "https://minotar.net/avatar/isolation/32.png" }
+                { name: "KB0L", rank: "high", img: "https://via.placeholder.com/32" },
+                { name: "kifve", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "Sorakimine", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "zSqmantha", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "Sayoshima", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "I BuFo I", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "STRAIQHT K", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "RAZPYlbsmYT", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "MegaFoxBound", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "c6m3", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "Drum is 9", rank: "low", img: "https://via.placeholder.com/32" }
             ],
             "Below Average": [
-                { name: "SavedByP1ng", rank: "high", img: "https://minotar.net/avatar/MPI_YT/32.png" },
-                { name: "Suspqct", rank: "high", img: "https://minotar.net/avatar/MPI_YT/32.png" },
-                { name: "wClient", rank: "high", img: "https://minotar.net/avatar/MPI_YT/32.png" },
-                { name: "kizueki", rank: "low", img: "https://minotar.net/avatar/MPI_YT/32.png" },
-                { name: "DeViL1090109010", rank: "low", img: "https://minotar.net/avatar/chuypopis/32.png" }
+                { name: "SavedByP1ng", rank: "high", img: "https://via.placeholder.com/32" },
+                { name: "Suspqct", rank: "high", img: "https://via.placeholder.com/32" },
+                { name: "wClient", rank: "high", img: "https://via.placeholder.com/32" },
+                { name: "kizueki", rank: "low", img: "https://via.placeholder.com/32" },
+                { name: "DeViL1090109010", rank: "low", img: "https://via.placeholder.com/32" }
             ],
             "Trash": [
-                { name: "PlaceholderUsername", rank: "high", img: "https://minotar.net/avatar/ALIPROYT1/32.png" },
-                { name: "PlaceholderUsername2", rank: "low", img: "https://minotar.net/avatar/hiadyman/32.png" }
+                { name: "PlaceholderUsername", rank: "high", img: "https://via.placeholder.com/32" },
+                { name: "PlaceholderUsername2", rank: "low", img: "https://via.placeholder.com/32" }
             ]
         };
 
@@ -215,15 +204,14 @@
                 
                 let playersHtml = data[tier].map(p => `
                     <div class="player-row rank-${p.rank}">
-                        <div class="status-bar"></div>
-                        <img src="${p.img}" class="avatar">
+                        <img src="${p.img}" class="avatar" alt="${p.name}">
                         <div class="username">${p.name}</div>
                         <div class="arrows"></div>
                     </div>
                 `).join('');
 
                 tierDiv.innerHTML = `
-                    <div class="tier-header">🏆 ${tier}</div>
+                    <div class="tier-header">${tier}</div>
                     <div class="player-list">${playersHtml}</div>
                 `;
                 container.appendChild(tierDiv);
