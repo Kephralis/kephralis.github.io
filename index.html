@@ -133,7 +133,6 @@
         }
 
         .modal-content {
-            /* Transparency increased to 0.4 and blur increased to 24px */
             background: rgba(22, 27, 34, 0.4); 
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
@@ -157,13 +156,13 @@
         }
         .close-btn:hover { color: #fff; }
 
-        #modal-username { font-size: 2rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.02em; }
+        #modal-username { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.02em; }
         #modal-img { width: 120px; height: 120px; border-radius: 12px; margin-bottom: 12px; border: 2px solid rgba(48, 54, 61, 0.5); object-fit: cover; }
         
         #modal-tier-indicator-wrapper {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 6px; /* Closer gap */
             margin-bottom: 20px;
         }
         
@@ -180,6 +179,11 @@
             font-weight: 700;
             text-transform: capitalize;
             letter-spacing: 0.02em;
+        }
+
+        /* Adjusted padding for a shorter horizontal background on the arrow tag */
+        #modal-rank-indicator {
+            padding: 6px 10px;
         }
         
         .modal-tier-tag span.material-symbols-outlined { font-size: 18px; font-variation-settings: 'wght' 400; }
@@ -325,14 +329,12 @@
             document.getElementById('modal-username').innerText = name;
             document.getElementById('modal-img').src = img;
             
-            // Tier Tag
             const tierTag = document.getElementById('modal-tier-indicator');
             const tierColorStr = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
             tierTag.style.color = tierColorStr; 
             document.getElementById('modal-tier-text').innerText = tierName;
             document.getElementById('modal-tier-icon').innerText = iconName;
             
-            // Rank Tag
             const rankTag = document.getElementById('modal-rank-indicator');
             const rankIcon = document.getElementById('modal-rank-icon');
             if (rank === "high" || rank === "low") {
@@ -343,14 +345,10 @@
                 rankTag.style.display = "none";
             }
             
-            // Updated Gradient Logic:
-            // Tier color starts at 0.25 opacity.
-            // Fades into a more transparent background color (0.4 opacity) at 65% height.
             const colorRgbStr = `${rgb[0]}, ${rgb[1]}, ${rgb[2]}`;
             const gradient = `linear-gradient(to bottom, rgba(${colorRgbStr}, 0.25) 0%, rgba(22, 27, 34, 0.4) 65%)`;
             document.getElementById('modal-container').style.background = gradient;
 
-            // Text content
             document.getElementById('modal-description').innerText = detail.desc;
             document.getElementById('modal-strengths').innerText = detail.strengths;
             document.getElementById('modal-weaknesses').innerText = detail.weaknesses;
