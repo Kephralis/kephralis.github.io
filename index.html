@@ -140,7 +140,7 @@
             border-radius: 12px;
             width: 100%;
             max-width: 450px;
-            padding: 32px;
+            padding: 20px 32px; /* Reduced top and bottom padding */
             position: relative;
             box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             text-align: center;
@@ -156,13 +156,26 @@
         }
         .close-btn:hover { color: #fff; }
 
-        #modal-username { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.02em; }
-        #modal-img { width: 120px; height: 120px; border-radius: 12px; margin-bottom: 12px; border: 2px solid rgba(48, 54, 61, 0.5); object-fit: cover; }
+        /* Adjusted margins and sizes for img and username */
+        #modal-img { 
+            width: 150px; 
+            height: 150px; 
+            border-radius: 16px; 
+            margin-bottom: 12px; 
+            border: 2px solid rgba(48, 54, 61, 0.5); 
+            object-fit: cover; 
+        }
+        #modal-username { 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            margin-bottom: 16px; 
+            letter-spacing: -0.02em; 
+        }
         
         #modal-tier-indicator-wrapper {
             display: flex;
             justify-content: center;
-            gap: 6px; /* Closer gap */
+            gap: 6px; 
             margin-bottom: 20px;
         }
         
@@ -181,7 +194,6 @@
             letter-spacing: 0.02em;
         }
 
-        /* Adjusted padding for a shorter horizontal background on the arrow tag */
         #modal-rank-indicator {
             padding: 6px 10px;
         }
@@ -227,8 +239,9 @@
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
         <div class="modal-content" id="modal-container" onclick="event.stopPropagation()">
             <span class="material-symbols-outlined close-btn" onclick="closeModal()">close</span>
-            <h2 id="modal-username">Username</h2>
+            
             <img id="modal-img" src="" alt="Player Avatar">
+            <h2 id="modal-username">Username</h2>
             
             <div id="modal-tier-indicator-wrapper">
                 <div class="modal-tier-tag" id="modal-tier-indicator">
