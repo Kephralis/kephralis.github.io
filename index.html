@@ -114,7 +114,10 @@
 
         .avatar { width: 26px; height: 26px; border-radius: 3px; background: #30363d; object-fit: cover; }
         .username { font-size: 0.9rem; font-weight: 500; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .rank-icon { font-size: 16px !important; font-variation-settings: 'wght' 600; user-select: none; color: #adb2c9; }
+        
+        .rank-icon { font-size: 16px !important; font-variation-settings: 'wght' 600; user-select: none; }
+        .rank-high .rank-icon { color: #adb2c9; }
+        .rank-low .rank-icon { color: #646775; }
 
         /* --- Modal Styling --- */
         .modal-overlay {
@@ -151,11 +154,10 @@
         .close-btn:hover { color: #fff; }
 
         #modal-username { font-size: 2rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.02em; }
-        #modal-img { width: 120px; height: 120px; border-radius: 12px; margin-bottom: 24px; border: 2px solid #30363d; object-fit: cover; }
-        #modal-description { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; white-space: pre-line; }
+        #modal-img { width: 120px; height: 120px; border-radius: 12px; margin-bottom: 12px; border: 2px solid #30363d; object-fit: cover; }
 
-        .modal-section { text-align: left; margin-top: 20px; }
-        .modal-section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .modal-section { text-align: left; margin-top: 24px; }
+        .modal-section-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
         .modal-section-content { color: var(--text-main); font-size: 0.9rem; line-height: 1.5; white-space: pre-line; }
 
         .title-strength { color: var(--accent-strength); }
@@ -194,7 +196,11 @@
             <span class="material-symbols-outlined close-btn" onclick="closeModal()">close</span>
             <h2 id="modal-username">Username</h2>
             <img id="modal-img" src="" alt="Player Avatar">
-            <p id="modal-description"></p>
+            
+            <div class="modal-section" style="margin-top: 10px;">
+                <div class="modal-section-title">Biography</div>
+                <div class="modal-section-content" id="modal-description"></div>
+            </div>
             
             <div class="modal-section">
                 <div class="modal-section-title title-strength">Strengths</div>
@@ -260,7 +266,7 @@
                 desc: "Known for suspicious movement and perfect tracking.",
                 strengths: "Unnatural aim\nInstant reactions",
                 weaknesses: "Very obvious hacks\nBan prone",
-                alts: "" // Empty will hide the section
+                alts: "" 
             }
         };
 
