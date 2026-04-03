@@ -197,15 +197,15 @@
         .modal-tier-tag span.material-symbols-outlined { font-size: 18px; font-variation-settings: 'wght' 400; }
         #modal-rank-icon { font-variation-settings: 'wght' 600; font-size: 20px; }
 
-        .modal-section { text-align: left; margin-top: 24px; display: none; } /* Default hidden until JS checks it */
+        .modal-section { text-align: left; margin-top: 24px; display: none; }
         .modal-section-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
         .modal-section-content { color: var(--text-main); font-size: 0.9rem; line-height: 1.5; white-space: pre-line; }
 
-        /* Specific style for empty player info */
+        /* Fallback text style - now aligned left */
         .no-info {
             font-style: italic;
             color: var(--text-muted) !important;
-            text-align: center;
+            text-align: left;
         }
 
         .title-strength { color: var(--accent-strength); }
@@ -323,7 +323,6 @@
                 desc: "A strategic mastermind who prefers slow, methodical gameplay and late-game scaling.", 
                 strengths: "Great map awareness\nUnpredictable strategies", 
                 weaknesses: "Struggles under early pressure\nSlower mechanical speed"
-                // No alts
             },
             "BisonJaguar": { 
                 desc: "A well-rounded player with consistent performance across the board.", 
@@ -335,14 +334,13 @@
                 desc: "An absolute wildcard. Sometimes plays like a top-tier pro, sometimes completely throws.", 
                 strengths: "Extremely high peak performance\nCreative problem solving", 
                 weaknesses: "Highly inconsistent\nTilts easily",
-                alts: "" // Empty string test
+                alts: "" 
             },
             "Tik Tok yybd": { 
                 desc: "A defensive specialist who excels at forcing the opponent to make mistakes.", 
                 strengths: "Impenetrable defense\nExtreme patience", 
                 weaknesses: "Weak early game\nStruggles against heavy, sustained aggro"
             }
-            // Players not listed here (like TrashPlayer1) will automatically trigger the "Insufficient information." state
         };
 
         const playerTierInfo = {};
@@ -359,7 +357,6 @@
         };
 
         function openModal(name, img) {
-            // Using an empty object as fallback so empty checks work correctly
             const detail = playerDetails[name] || {};
             
             const tierName = playerTierInfo[name] || "Unknown";
@@ -390,7 +387,6 @@
             const gradient = `linear-gradient(to bottom, rgba(${colorRgbStr}, 0.25) 0%, rgba(22, 27, 34, 0.4) 65%)`;
             document.getElementById('modal-container').style.background = gradient;
 
-            // Gather all sections and check for content
             const hasDesc = !!(detail.desc && detail.desc.trim() !== "");
             const hasStrengths = !!(detail.strengths && detail.strengths.trim() !== "");
             const hasWeaknesses = !!(detail.weaknesses && detail.weaknesses.trim() !== "");
@@ -405,20 +401,17 @@
             const altsSection = document.getElementById('alts-section');
             const altsEl = document.getElementById('modal-alts');
 
-            // Reset italicized fallback class
             descEl.classList.remove('no-info');
 
-            // If absolutely nothing is present for this player
             if (!hasDesc && !hasStrengths && !hasWeaknesses && !hasAlts) {
                 bioSection.style.display = "block";
                 descEl.innerText = "Insufficient information.";
-                descEl.classList.add('no-info'); // applies italic and gray styles
+                descEl.classList.add('no-info'); 
 
                 strSection.style.display = "none";
                 wkSection.style.display = "none";
                 altsSection.style.display = "none";
             } else {
-                // Determine visibility for Bio
                 if (hasDesc) {
                     bioSection.style.display = "block";
                     descEl.innerText = detail.desc;
@@ -426,7 +419,6 @@
                     bioSection.style.display = "none";
                 }
 
-                // Determine visibility for Strengths
                 if (hasStrengths) {
                     strSection.style.display = "block";
                     strEl.innerText = detail.strengths;
@@ -434,7 +426,6 @@
                     strSection.style.display = "none";
                 }
 
-                // Determine visibility for Weaknesses
                 if (hasWeaknesses) {
                     wkSection.style.display = "block";
                     wkEl.innerText = detail.weaknesses;
@@ -442,7 +433,6 @@
                     wkSection.style.display = "none";
                 }
 
-                // Determine visibility for Alts
                 if (hasAlts) {
                     altsSection.style.display = "block";
                     altsEl.innerText = detail.alts;
