@@ -140,7 +140,7 @@
             border-radius: 12px;
             width: 100%;
             max-width: 450px;
-            padding: 20px 32px; /* Reduced top and bottom padding */
+            padding: 20px 32px;
             position: relative;
             box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             text-align: center;
@@ -156,7 +156,6 @@
         }
         .close-btn:hover { color: #fff; }
 
-        /* Adjusted margins and sizes for img and username */
         #modal-img { 
             width: 150px; 
             height: 150px; 
@@ -194,16 +193,20 @@
             letter-spacing: 0.02em;
         }
 
-        #modal-rank-indicator {
-            padding: 6px 10px;
-        }
-        
+        #modal-rank-indicator { padding: 6px 10px; }
         .modal-tier-tag span.material-symbols-outlined { font-size: 18px; font-variation-settings: 'wght' 400; }
         #modal-rank-icon { font-variation-settings: 'wght' 600; font-size: 20px; }
 
-        .modal-section { text-align: left; margin-top: 24px; }
+        .modal-section { text-align: left; margin-top: 24px; display: none; } /* Default hidden until JS checks it */
         .modal-section-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
         .modal-section-content { color: var(--text-main); font-size: 0.9rem; line-height: 1.5; white-space: pre-line; }
+
+        /* Specific style for empty player info */
+        .no-info {
+            font-style: italic;
+            color: var(--text-muted) !important;
+            text-align: center;
+        }
 
         .title-strength { color: var(--accent-strength); }
         .title-weakness { color: var(--accent-weakness); }
@@ -230,10 +233,10 @@
     </div>
 
     <footer class="board-footer">
-        <p>All players who appear on this tier list have been in many 1v1s with me, allowing me to determine their skill level.</p>
-        <p>Player skill level measurement is based on score, strategy and how easy or hard it is to win against the player.</p>
-        <p>Only active or relevant players are on this tierlist.</p>
+        <p>All players who appear on this tier list have been in a 1v1 with me.</p>
         <p>See <span class="score-highlight">{score}</span> for more information.</p>
+        <p>Player skill level measurement is based on score, strategy and how easy or hard it is to win against the player.</p>
+        <p>The order of players from top to bottom is not relevant.</p>
     </footer>
 
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
@@ -257,12 +260,12 @@
                 <div class="modal-section-content" id="modal-description"></div>
             </div>
             
-            <div class="modal-section">
+            <div class="modal-section" id="strengths-section">
                 <div class="modal-section-title title-strength">Strengths</div>
                 <div class="modal-section-content" id="modal-strengths"></div>
             </div>
 
-            <div class="modal-section">
+            <div class="modal-section" id="weaknesses-section">
                 <div class="modal-section-title title-weakness">Weaknesses</div>
                 <div class="modal-section-content" id="modal-weaknesses"></div>
             </div>
@@ -285,14 +288,20 @@
             ],
             "Mid": [
                 { name: "KB0L", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/kbb.png" },
-                { name: "Simofied", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
-                { name: "Eziak123", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/ezk.jpg" },
+                { name: "kifve", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/kfv.png" },
+                { name: "Sorakimine", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
+                { name: "zSqmantha", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
+                { name: "Sayoshima", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
                 { name: "I BuFo I", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/simp.png" },
-                { name: "Suspqct", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" }
+                { name: "MegaFoxBound", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
+                { name: "c6m3", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" }
             ],
             "Below Average": [
-                { name: "DeViL1090109010", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
-                { name: "SavedByP1ng", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/L.png" }
+                { name: "SavedByP1ng", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/L.png" },
+                { name: "Suspqct", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
+                { name: "wClient", rank: "high", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
+                { name: "kizueki", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
+                { name: "DeViL1090109010", rank: "low", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" }
             ],
             "Trash": [
                 { name: "TrashPlayer1", rank: "none", img: "https://raw.githubusercontent.com/Kephralis/website/refs/heads/main/images/phold.png" },
@@ -303,52 +312,38 @@
             ]
         };
 
-const playerDetails = {
-    // Player 1: Has a couple of alts
-    "Kephralis": { 
-        desc: "The Greatest of All Time. He's the best when it comes to resets, movement, aiming and every aspect of Minecraft Bedrock PvP.", 
-        strengths: "All of them", 
-        weaknesses: "None", 
-        alts: "SynixPvP" 
-    },
-    
-    // Player 2: Has no alts (property is completely omitted)
-    "Mr Binzy": { 
-        desc: "A known lag-carried zulu tribesman living in the lush jungles of South Africa. He has an unusually large ego for his skill level, and has been observed praying to his god Unkulunkulu before every fight to secure victory.", 
-        strengths: "African Warrior Tribal Spirit", 
-        weaknesses: "Lagging network connection due to the mud hut's electrically conductive properties.\nConsumes muddy water, which dehydrates and weakens him in battle."
-    },
-    
-    // Player 3: Has one alt
-    "Rozern": { 
-        desc: "PLCEHOLDER", 
-        strengths: "Has Aura\nIs Known", 
-        weaknesses: "None", 
-        alts: "" 
-    },
-    
-    // Player 4: Has no alts (using an empty string)
-    "Tik Tok yybd": { 
-        desc: "This seemingly unknown islamic arab is better than most people on this list. He types in an unidentified alien cipher consisting of latin letters and numbers to communicate to other arab spies, fighting for the Islamic State's glory.", 
-        strengths: "Praises Allah and is rewarded with reach.", 
-        weaknesses: "Sandstorms",
-        alts: "" 
-    },
-
-    "I BuFo I": { 
-        desc: "Controller guy. Also experiences strange hallucinations about an imaginary female named Lily.", 
-        strengths: "None", 
-        weaknesses: "Psychosis",
-        alts: "" 
-    },
-    
-    // Player 5: Has no alts (property omitted)
-    "KB0L": { 
-        desc: `This player is a Mid-tier PvPer overall. He is a "chill guy", maintaining a low cortisol level throughout his many hours of gameplay. Make sure not to fight him more than once, or else he'll "figure out your playstyle" and outplay you like the 400iq supergenius he is.`, 
-        strengths: "Can counter and outmove anyone.", 
-        weaknesses: "Zeqa Moderator"
-    }
-};
+        const playerDetails = {
+            "Kephralis": { 
+                desc: "A highly aggressive player known for quick rush tactics and early game dominance.", 
+                strengths: "Fast reaction time\nExcellent mechanical skill", 
+                weaknesses: "Overextends often\nPoor resource management", 
+                alts: "AltAccount1\nSecretSmurf" 
+            },
+            "Mr Binzy": { 
+                desc: "A strategic mastermind who prefers slow, methodical gameplay and late-game scaling.", 
+                strengths: "Great map awareness\nUnpredictable strategies", 
+                weaknesses: "Struggles under early pressure\nSlower mechanical speed"
+                // No alts
+            },
+            "BisonJaguar": { 
+                desc: "A well-rounded player with consistent performance across the board.", 
+                strengths: "Solid defense\nGood adaptability", 
+                weaknesses: "Lacks a killer instinct\nSometimes predictable", 
+                alts: "JustAnotherAlt" 
+            },
+            "Rozern": { 
+                desc: "An absolute wildcard. Sometimes plays like a top-tier pro, sometimes completely throws.", 
+                strengths: "Extremely high peak performance\nCreative problem solving", 
+                weaknesses: "Highly inconsistent\nTilts easily",
+                alts: "" // Empty string test
+            },
+            "Tik Tok yybd": { 
+                desc: "A defensive specialist who excels at forcing the opponent to make mistakes.", 
+                strengths: "Impenetrable defense\nExtreme patience", 
+                weaknesses: "Weak early game\nStruggles against heavy, sustained aggro"
+            }
+            // Players not listed here (like TrashPlayer1) will automatically trigger the "Insufficient information." state
+        };
 
         const playerTierInfo = {};
         const playerRankInfo = {};
@@ -364,12 +359,8 @@ const playerDetails = {
         };
 
         function openModal(name, img) {
-            const detail = playerDetails[name] || {
-                desc: "Placeholder text 12345 ABCD.\nNewlined text 1234.",
-                strengths: "StrengthPlaceholder1\nStrengthPlaceholder2",
-                weaknesses: "WeaknessPlaceholder1\nWeaknessPlaceholder2",
-                alts: ""
-            };
+            // Using an empty object as fallback so empty checks work correctly
+            const detail = playerDetails[name] || {};
             
             const tierName = playerTierInfo[name] || "Unknown";
             const iconName = tierIcons[tierName] || "help";
@@ -399,16 +390,65 @@ const playerDetails = {
             const gradient = `linear-gradient(to bottom, rgba(${colorRgbStr}, 0.25) 0%, rgba(22, 27, 34, 0.4) 65%)`;
             document.getElementById('modal-container').style.background = gradient;
 
-            document.getElementById('modal-description').innerText = detail.desc;
-            document.getElementById('modal-strengths').innerText = detail.strengths;
-            document.getElementById('modal-weaknesses').innerText = detail.weaknesses;
+            // Gather all sections and check for content
+            const hasDesc = !!(detail.desc && detail.desc.trim() !== "");
+            const hasStrengths = !!(detail.strengths && detail.strengths.trim() !== "");
+            const hasWeaknesses = !!(detail.weaknesses && detail.weaknesses.trim() !== "");
+            const hasAlts = !!(detail.alts && detail.alts.trim() !== "");
 
+            const bioSection = document.getElementById('bio-section');
+            const descEl = document.getElementById('modal-description');
+            const strSection = document.getElementById('strengths-section');
+            const strEl = document.getElementById('modal-strengths');
+            const wkSection = document.getElementById('weaknesses-section');
+            const wkEl = document.getElementById('modal-weaknesses');
             const altsSection = document.getElementById('alts-section');
-            if (detail.alts && detail.alts.trim() !== "") {
-                altsSection.style.display = "block";
-                document.getElementById('modal-alts').innerText = detail.alts;
-            } else {
+            const altsEl = document.getElementById('modal-alts');
+
+            // Reset italicized fallback class
+            descEl.classList.remove('no-info');
+
+            // If absolutely nothing is present for this player
+            if (!hasDesc && !hasStrengths && !hasWeaknesses && !hasAlts) {
+                bioSection.style.display = "block";
+                descEl.innerText = "Insufficient information.";
+                descEl.classList.add('no-info'); // applies italic and gray styles
+
+                strSection.style.display = "none";
+                wkSection.style.display = "none";
                 altsSection.style.display = "none";
+            } else {
+                // Determine visibility for Bio
+                if (hasDesc) {
+                    bioSection.style.display = "block";
+                    descEl.innerText = detail.desc;
+                } else {
+                    bioSection.style.display = "none";
+                }
+
+                // Determine visibility for Strengths
+                if (hasStrengths) {
+                    strSection.style.display = "block";
+                    strEl.innerText = detail.strengths;
+                } else {
+                    strSection.style.display = "none";
+                }
+
+                // Determine visibility for Weaknesses
+                if (hasWeaknesses) {
+                    wkSection.style.display = "block";
+                    wkEl.innerText = detail.weaknesses;
+                } else {
+                    wkSection.style.display = "none";
+                }
+
+                // Determine visibility for Alts
+                if (hasAlts) {
+                    altsSection.style.display = "block";
+                    altsEl.innerText = detail.alts;
+                } else {
+                    altsSection.style.display = "none";
+                }
             }
 
             document.getElementById('modalOverlay').style.display = 'flex';
