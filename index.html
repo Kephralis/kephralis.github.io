@@ -6,6 +6,7 @@
     <title>Kephralis</title>
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400..600&display=block" rel="stylesheet" />
     
     <style>
         :root {
@@ -38,18 +39,16 @@
             font-size: 5rem;
             font-weight: 700;
             letter-spacing: -0.02em;
-            margin-bottom: 2.5rem;
+            /* Reduced margin from 2.5rem to 1rem */
+            margin-bottom: 1rem; 
             text-align: center;
             display: flex;
             gap: 2px;
-            /* Glow effect */
             filter: drop-shadow(0px 0px 15px rgba(255, 255, 255, 0.2));
         }
 
         .hero-title span {
             display: inline-block;
-            
-            /* RGB Text Effect */
             background: linear-gradient(
                 90deg, 
                 #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff, #ff0000
@@ -58,14 +57,12 @@
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
-
-            /* Apply animations to each letter */
             animation: 
                 wave-float 2s ease-in-out infinite,
                 rgb-shift 6s linear infinite;
         }
 
-        /* The separate delays create the "wave" look */
+        /* Wave Delays */
         .hero-title span:nth-child(1) { animation-delay: 0.0s; }
         .hero-title span:nth-child(2) { animation-delay: 0.1s; }
         .hero-title span:nth-child(3) { animation-delay: 0.2s; }
@@ -76,17 +73,11 @@
         .hero-title span:nth-child(8) { animation-delay: 0.7s; }
         .hero-title span:nth-child(9) { animation-delay: 0.8s; }
 
-        /* Oscillating Motion */
         @keyframes wave-float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-25px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); }
         }
 
-        /* RGB Cycling */
         @keyframes rgb-shift {
             0% { background-position: 0% center; }
             100% { background-position: -400% center; }
@@ -101,17 +92,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px; /* Added gap for the icons */
             text-decoration: none;
             color: var(--text-main);
             background-color: var(--bg-card);
             border: 1px solid #30363d;
-            padding: 14px 32px;
+            padding: 14px 28px;
             border-radius: 8px;
             font-size: 1.1rem;
             font-weight: 500;
             letter-spacing: 0.02em;
             transition: all 0.2s ease;
             cursor: pointer;
+        }
+
+        .btn .material-symbols-outlined {
+            font-size: 22px;
         }
 
         .btn:hover {
@@ -139,8 +135,14 @@
     </h1>
     
     <div class="button-group">
-        <a href="https://kephralis.github.io/tierlist/" class="btn">Tier List</a>
-        <a href="https://kephralis.github.io/resume.png" class="btn" target="_blank" rel="noopener noreferrer">Resume</a>
+        <a href="https://kephralis.github.io/tierlist/" class="btn">
+            <span class="material-symbols-outlined">trophy</span>
+            Tier List
+        </a>
+        <a href="https://kephralis.github.io/resume.png" class="btn" target="_blank" rel="noopener noreferrer">
+            <span class="material-symbols-outlined">description</span>
+            Resume
+        </a>
     </div>
 
 </body>
