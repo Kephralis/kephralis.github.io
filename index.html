@@ -37,9 +37,44 @@
             font-size: 5rem;
             font-weight: 700;
             letter-spacing: -0.04em;
-            color: #ffffff;
             margin-bottom: 2rem;
             text-align: center;
+            
+            /* RGB Text Effect */
+            background: linear-gradient(
+                90deg, 
+                #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff, #ff0000
+            );
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            
+            /* Slight Glow (Using drop-shadow because text is transparent) */
+            filter: drop-shadow(0px 0px 12px rgba(255, 255, 255, 0.25));
+
+            /* Floating and Color Cycling Animations */
+            animation: rgb-wave 4s linear infinite, float 4s ease-in-out infinite;
+        }
+
+        /* Float Up and Down */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Cycle the Gradient */
+        @keyframes rgb-wave {
+            0% {
+                background-position: 0% center;
+            }
+            100% {
+                background-position: -200% center;
+            }
         }
 
         .button-group {
