@@ -48,28 +48,26 @@
 
         .hero-title span {
             display: inline-block;
-            
-            /* REFINED SPECTRUM FROM IMAGE */
             background: linear-gradient(
                 90deg, 
-                #ff0000, /* Red */
-                #ff8000, /* Orange */
-                #ffff00, /* Yellow */
-                #00ff00, /* Green */
-                #00ffff, /* Cyan */
-                #0000ff, /* Blue */
-                #8000ff, /* Purple */
-                #ff00ff, /* Pink/Magenta */
-                #ff0000  /* Loop back to Red */
+                #ff0000, 
+                #ff8000, 
+                #ffff00, 
+                #00ff00, 
+                #00ffff, 
+                #0000ff, 
+                #8000ff, 
+                #ff00ff, 
+                #ff0000  
             );
-            background-size: 800% auto; /* Increased for smoother flow between more colors */
+            background-size: 800% auto;
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
             
             animation: 
                 wave-float 2s ease-in-out infinite,
-                rgb-shift 10s linear infinite; /* Slightly slower to let the new colors "breathe" */
+                rgb-shift 10s linear infinite;
         }
 
         /* Wave Delays */
@@ -147,7 +145,7 @@
             <span class="material-symbols-outlined">trophy</span>
             Tier List
         </a>
-        <a href="https://kephralis.github.io/aboutme" class="btn" target="_blank" rel="noopener noreferrer">
+        <a href="https://kephralis.github.io/aboutme" class="btn">
             <span class="material-symbols-outlined">person</span>
             About Me
         </a>
